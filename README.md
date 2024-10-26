@@ -1,5 +1,5 @@
-# cpp-project-template
+# Letter League Bot
 
-A minimal template for C++ projects using tools I like to use
+An implementation of a simple bot for automatically playing the discord-hosted scrabble-like game of [letter league](https://discord.fandom.com/wiki/Letter_League)
 
-# features
+# About
