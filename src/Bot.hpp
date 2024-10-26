@@ -9,6 +9,7 @@ class Bot {
 public:
   void initializeGameState();
   void updateBoardState();
+  bool okay() const;
   std::vector<Moves::Move> generateMoves();
 
 private:
