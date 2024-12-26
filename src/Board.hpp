@@ -9,6 +9,8 @@ enum class MultiplierType { LETTER, WORD };
 struct Multiplier {
   unsigned short amount;
   MultiplierType type;
+
+  bool operator==(const Multiplier &rhs) const = default;
 };
 
 constexpr Multiplier operator""_L(const unsigned long long amount) {
@@ -51,4 +53,11 @@ static_assert(BLOCK_WIDTH * BLOCK_WIDTH == std::size(BLOCK));
 
 } // namespace Blocks
 
-Tiles::Multiplier getMultiplerOfTileLocation(const int i, const int j) {}
+Tiles::Multiplier getMultiplerOfTileLocation(const int i, const int j) {
+  const auto congruentI =
+      ((i % Blocks::BLOCK_WIDTH) + Blocks::BLOCK_WIDTH) % Blocks::BLOCK_WIDTH;
+  const auto congruentJ =
+      ((j % Blocks::BLOCK_WIDTH) + Blocks::BLOCK_WIDTH) % Blocks::BLOCK_WIDTH;
+
+  return Blocks::BLOCK[congruentI + congruentJ * Blocks::BLOCK_WIDTH];
+}
