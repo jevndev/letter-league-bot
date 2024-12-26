@@ -28,45 +28,25 @@ namespace Blocks {
 using namespace Tiles;
 
 // clang-format off
-static constexpr std::array BLOCK_1 = {
-    NIL, 2_L, NIL, NIL, NIL, 2_L, NIL,
-    2_W, NIL, NIL, NIL, NIL, NIL, 2_W,
-    NIL, NIL, 3_L, NIL, 3_L, NIL, NIL,
-    NIL, 2_W, NIL, NIL, NIL, 2_W, NIL,
-    NIL, NIL, 3_L, NIL, 3_L, NIL, NIL,
-    2_W, NIL, NIL, NIL, NIL, NIL, 2_W,
-    NIL, 2_L, NIL, NIL, NIL, 2_L, NIL
+
+static constexpr std::array BLOCK = {
+    NIL, NIL, 2_W, NIL, NIL, NIL, 2_W, NIL, NIL, NIL, 2_W, NIL,
+    NIL, 3_L, NIL, NIL, NIL, NIL, 2_L, NIL, NIL, NIL, NIL, 3_L,
+    NIL, NIL, NIL, 2_W, NIL, NIL, NIL, NIL, NIL, 2_W, NIL, NIL,
+    2_L, NIL, 2_L, NIL, NIL, 2_L, NIL, 2_L, NIL, NIL, 2_L, NIL,
+    NIL, NIL, NIL, NIL, 2_W, NIL, NIL, NIL, 2_W, NIL, NIL, NIL,
+    2_W, NIL, NIL, 2_L, NIL, 3_L, NIL, 3_L, NIL, 2_L, NIL, NIL,
+    NIL, NIL, NIL, NIL, NIL, NIL, 3_W, NIL, NIL, NIL, NIL, 2_L,
+    2_L, NIL, NIL, 2_L, NIL, 3_L, NIL, 3_L, NIL, 2_L, NIL, NIL,
+    NIL, NIL, NIL, NIL, 2_W, NIL, NIL, NIL, 2_W, NIL, NIL, NIL,
+    NIL, NIL, 2_L, NIL, NIL, 2_L, NIL, 2_L, NIL, NIL, 2_L, NIL,
+    NIL, NIL, NIL, 2_W, NIL, NIL, NIL, NIL, NIL, 2_W, NIL, NIL,
+    NIL, 3_L, NIL, NIL, NIL, NIL, 2_L, NIL, NIL, NIL, NIL, 3_L,
 };
 
-static constexpr std::array BLOCK_2 = {
-    NIL, NIL, 2_L, NIL, 2_L, NIL, NIL,
-    2_W, NIL, NIL, NIL, NIL, NIL, 2_W,
-    NIL, NIL, NIL, 2_L, NIL, NIL, NIL,
-    NIL, NIL, NIL, 2_W, NIL, NIL, NIL,
-    NIL, NIL, NIL, 2_L, NIL, NIL, NIL,
-    2_W, NIL, NIL, NIL, NIL, NIL, 2_W,
-    NIL, NIL, 2_L, NIL, 2_L, NIL, NIL,
-};
+static constexpr auto BLOCK_WIDTH = 12;
+static_assert(BLOCK_WIDTH * BLOCK_WIDTH == std::size(BLOCK));
 
-static constexpr std::array BLOCK_3 = {
-    NIL, NIL, 2_L, NIL, 2_L, NIL, NIL,
-    NIL, 2_W, NIL, NIL, NIL, 2_W, NIL,
-    2_L, NIL, 3_L, NIL, 3_L, NIL, 2_L,
-    NIL, NIL, NIL, 3_W, NIL, NIL, NIL,
-    2_L, NIL, 3_L, NIL, 3_L, NIL, 2_L,
-    NIL, 2_W, NIL, NIL, NIL, 2_W, NIL,
-    NIL, NIL, 2_L, NIL, 2_L, NIL, NIL,
-};
-
-static constexpr std::array BLOCK_4 = {
-    NIL, 2_L, NIL, NIL, NIL, 2_L, NIL,
-    2_L, NIL, NIL, NIL, NIL, NIL, 2_L,
-    NIL, NIL, NIL, NIL, NIL, NIL, NIL,
-    NIL, NIL, 2_L, 2_W, 2_L, NIL, NIL,
-    NIL, NIL, NIL, NIL, NIL, NIL, NIL,
-    2_L, NIL, NIL, NIL, NIL, NIL, 2_L,
-    NIL, 2_L, NIL, NIL, NIL, 2_L, NIL
-};
 // clang-format on
 
 } // namespace Blocks
