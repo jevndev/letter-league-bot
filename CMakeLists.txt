@@ -54,6 +54,11 @@ target_link_libraries(
     GTest::gtest_main
 )
 
+target_include_directories(
+    run_tests PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+)
+
 include(GoogleTest)
 gtest_discover_tests(run_tests)
 
