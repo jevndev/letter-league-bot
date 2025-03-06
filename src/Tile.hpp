@@ -6,6 +6,8 @@
 struct Tile {
   char letter;
   uint8_t score;
+
+  constexpr auto operator<=>(const Tile &rhs) const = default;
 };
 
 // TODO: Handle wildcard tiles
