@@ -35,6 +35,7 @@ include(FetchContent)
 FetchContent_Declare(
     googletest
     URL https://github.com/google/googletest/archive/df1544bcee0c7ce35cd5ea0b3eb8cc81855a4140.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
