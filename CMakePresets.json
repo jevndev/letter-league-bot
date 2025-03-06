@@ -5,9 +5,9 @@
             "name": "letter-league-bot",
             "displayName": "Clang 19.1.2 x86_64-pc-linux-gnu",
             "description": "Using compilers: C = /usr/bin/clang-19, CXX = /usr/bin/clang++-19",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out",
                 "CMAKE_C_COMPILER": "/usr/bin/clang-19",
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++-19",
                 "CMAKE_BUILD_TYPE": "Debug"
