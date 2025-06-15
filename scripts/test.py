@@ -140,46 +140,67 @@ def highlight_locations(
         )
 
 
-def add_word(
-    word: Word,
-    existing_words: list[Word],
-    existing_adjacent_locations: set[Location],
-    existing_word_locations: set[Location],
-) -> tuple[list[Word], set[Location], set[Location]]:
-    return (
-        existing_words + [word],
-        (existing_adjacent_locations | get_all_adjacent_locations(word))
-        - word.occupied_locations()
-        - existing_word_locations,
-        existing_word_locations | word.occupied_locations(),
-    )
+class Gamestate:
+    def __init__(self):
+        self._words: list[Word] = []
+        self._word_occupied_locations: set[Location] = set()
+        self._open_adjacent_locations: set[Location] = set()
+
+    def add_word(self, word: Word):
+        self._words.append(word)
+        self._word_occupied_locations |= word.occupied_locations()
+        self._open_adjacent_locations = (
+            self._open_adjacent_locations
+            | get_all_adjacent_locations(word) - self._word_occupied_locations
+        )
+
+    @property
+    def words(self) -> list[Word]:
+        return self._words
+
+    def render(self, ax: matplotlib.axes.Axes):
+        board_left_bound = (
+            min(location.x for location in self._word_occupied_locations) - 10
+        )
+        board_right_bound = (
+            max(location.x for location in self._word_occupied_locations) + 10
+        )
+        board_lower_bound = (
+            min(location.y for location in self._word_occupied_locations) - 10
+        )
+        board_upper_bound = (
+            max(location.y for location in self._word_occupied_locations) + 10
+        )
+
+        ax.set_xlim(board_left_bound, board_right_bound)
+        ax.set_ylim(board_lower_bound, board_upper_bound)
+
+        render_grid(
+            list(range(board_left_bound, board_right_bound)),
+            list(range(board_lower_bound, board_upper_bound)),
+            ax,
+        )
+
+        highlight_locations(self._open_adjacent_locations, ax)
+        highlight_locations(self._word_occupied_locations, ax, color="tab:green")
+        render_words(self._words, ax)
+        ax.set_aspect(1)
+        ax.invert_yaxis()
 
 
 def main():
-    wordlist, locations, word_locations = add_word(
-        Word("HELLO", Location(0, 0), Word.Direction.DOWN), [], set(), set()
-    )
+    game = Gamestate()
 
-    wordlist, locations, word_locations = add_word(
+    game.add_word(Word("HELLO", Location(0, 0), Word.Direction.DOWN))
+
+    game.add_word(
         Word("EATERY", Location(0, 1), Word.Direction.RIGHT),
-        wordlist,
-        locations,
-        word_locations,
     )
 
     fig, ax = plt.subplots(1, 1)
 
-    ax.set_xlim(-10, 10)
-    ax.set_ylim(-10, 10)
-    render_grid(list(range(-10, 10)), list(range(-10, 10)), ax)
+    game.render(ax)
 
-    highlight_locations(locations, ax)
-    highlight_locations(word_locations, ax, color="tab:green")
-
-    render_words(wordlist, ax)
-
-    ax.invert_yaxis()
-    ax.set_aspect(1)
     plt.show()
 
 
