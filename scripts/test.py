@@ -11,7 +11,7 @@ from rich import print
 import dataclasses
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(unsafe_hash=True)
 class Location:
     x: int
     y: int
@@ -40,16 +40,30 @@ class Word:
     def location(self) -> Location:
         return self._location
 
+    def occupied_locations(self) -> set[Location]:
+        match self._direction:
+            case Word.Direction.DOWN:
+                return {
+                    Location(self._location.x, self.location.y + y)
+                    for y in range(len(self._data))
+                }
 
-def get_all_adjacent_locations(word: Word) -> list[Location]:
-    all_locations: list[Location] = []
+            case Word.Direction.RIGHT:
+                return {
+                    Location(self.location.x + x, self.location.y)
+                    for x in range(len(self._data))
+                }
+
+
+def get_all_adjacent_locations(word: Word) -> set[Location]:
+    all_locations: set[Location] = set()
     start_location = word.location
 
     match word.direction:
         case Word.Direction.DOWN:
-            all_locations.append(Location(start_location.x, start_location.y - 1))
+            all_locations.add(Location(start_location.x, start_location.y - 1))
 
-            all_locations.extend(
+            all_locations.update(
                 Location(start_location.x + 1, y)
                 for y in range(start_location.y, len(word.word))
             )
@@ -109,33 +123,60 @@ def render_grid(xrange: list[int], yrange: list[int], ax: matplotlib.axes.Axes):
     ax.vlines(xrange, min(yrange), max(yrange), color="tab:grey")
 
 
-def highlight_locations(locations: typing.Iterable[Location], ax: matplotlib.axes.Axes):
+def highlight_locations(
+    locations: typing.Iterable[Location],
+    ax: matplotlib.axes.Axes,
+    color: str = "yellow",
+):
     for location in locations:
         ax.add_patch(
             matplotlib.patches.Rectangle(
                 (location.x, location.y),
                 1,
                 1,
-                color="yellow",
+                color=color,
                 alpha=0.5,
             )
         )
 
 
+def add_word(
+    word: Word,
+    existing_words: list[Word],
+    existing_adjacent_locations: set[Location],
+    existing_word_locations: set[Location],
+) -> tuple[list[Word], set[Location], set[Location]]:
+    return (
+        existing_words + [word],
+        (existing_adjacent_locations | get_all_adjacent_locations(word))
+        - word.occupied_locations()
+        - existing_word_locations,
+        existing_word_locations | word.occupied_locations(),
+    )
+
+
 def main():
-    words = [Word("Hello", Location(0, 0), Word.Direction.DOWN)]
+    wordlist, locations, word_locations = add_word(
+        Word("HELLO", Location(0, 0), Word.Direction.DOWN), [], set(), set()
+    )
+
+    wordlist, locations, word_locations = add_word(
+        Word("EATERY", Location(0, 1), Word.Direction.RIGHT),
+        wordlist,
+        locations,
+        word_locations,
+    )
+
     fig, ax = plt.subplots(1, 1)
 
     ax.set_xlim(-10, 10)
     ax.set_ylim(-10, 10)
-
     render_grid(list(range(-10, 10)), list(range(-10, 10)), ax)
 
-    locations = get_all_adjacent_locations(words[0])
-    print(locations)
     highlight_locations(locations, ax)
+    highlight_locations(word_locations, ax, color="tab:green")
 
-    render_words(words, ax)
+    render_words(wordlist, ax)
 
     ax.invert_yaxis()
     ax.set_aspect(1)
