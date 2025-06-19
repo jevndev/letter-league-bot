@@ -1,3 +1,4 @@
+from collections import defaultdict
 import enum
 import typing
 
@@ -53,6 +54,9 @@ class Word:
                     Location(self.location.x + x, self.location.y)
                     for x in range(len(self._data))
                 }
+
+    def __repr__(self) -> str:
+        return f"Word({self._data}, {self._location}, {self.direction})"
 
 
 def get_all_adjacent_locations(word: Word) -> set[Location]:
@@ -187,19 +191,71 @@ class Gamestate:
         ax.set_aspect(1)
         ax.invert_yaxis()
 
+    def _word_collides(self, word: Word, intended_collision: Location) -> bool:
+        return any(
+            loc in self._word_occupied_locations
+            for loc in word.occupied_locations()
+            if loc != intended_collision
+        )
+
+    @staticmethod
+    def _get_word_origin_from_ith_letter(
+        i: int, direction: Word.Direction, letter_location: Location
+    ) -> Location:
+        if direction == Word.Direction.DOWN:
+            return Location(letter_location.x, letter_location.y - i)
+        elif direction == Word.Direction.RIGHT:
+            return Location(letter_location.x - i, letter_location.y)
+
+    def get_valid_word_placements(self, valid_words: list[str]) -> list[Word]:
+        valid_word_placements: list[Word] = []
+
+        letter_to_loc_map: dict[str, list[Location]] = defaultdict(list)
+
+        for word in self._words:
+            for letter, loc in zip(word.word, word.occupied_locations()):
+                letter_to_loc_map[letter].append(loc)
+
+        for word in valid_words:
+            for i, letter in enumerate(word):
+                for dir in (Word.Direction.DOWN, Word.Direction.RIGHT):
+                    locations_for_letter = letter_to_loc_map[letter]
+                    for location in locations_for_letter:
+                        attempted_placement = Word(
+                            word,
+                            Gamestate._get_word_origin_from_ith_letter(
+                                i, dir, location
+                            ),
+                            dir,
+                        )
+
+                        if not self._word_collides(attempted_placement, location):
+                            valid_word_placements.append(attempted_placement)
+
+        return valid_word_placements
+
+
+valid_words = ["HELLO", "EATERY"]
+
+import copy
+
 
 def main():
     game = Gamestate()
 
-    game.add_word(Word("HELLO", Location(0, 0), Word.Direction.DOWN))
+    game.add_word(Word("FOO", Location(0, 0), direction=Word.Direction.DOWN))
 
-    game.add_word(
-        Word("EATERY", Location(0, 1), Word.Direction.RIGHT),
-    )
+    potential_plays = game.get_valid_word_placements(valid_words)
 
-    fig, ax = plt.subplots(1, 1)
+    fig, axs = plt.subplots(1, len(potential_plays))
+    print(potential_plays)
 
-    game.render(ax)
+    axs: list[matplotlib.axes.Axes] = axs
+    for ax, play in zip(axs, potential_plays):
+        potential_game = copy.deepcopy(game)
+        potential_game.add_word(play)
+
+        potential_game.render(ax)
 
     plt.show()
 
