@@ -222,5 +222,7 @@ int main() {
 
   std::printf("Finished Building Wordmap\n");
 
+  writeWordMap(std::filesystem::path("out.txt"), wordMap);
+
   return 0;
 }
