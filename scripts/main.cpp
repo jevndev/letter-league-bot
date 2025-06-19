@@ -4,10 +4,12 @@
 #include <filesystem>
 #include <fstream>
 #include <printf.h>
+#include <random>
 #include <ranges>
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 enum class Direction : uint8_t { RIGHT, DOWN };
@@ -213,9 +215,34 @@ void writeWordMap(
   }
 }
 
+std::vector<std::string> getNRandomWords(const std::vector<std::string> &words,
+                                         const std::size_t n) {
+  if (n > words.size()) {
+    throw std::invalid_argument(
+        "Requested more words than available in the list");
+  }
+
+  std::vector<std::string> randomWords;
+  std::unordered_set<std::size_t> selectedIndices;
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<std::size_t> dist(0, words.size() - 1);
+
+  while (randomWords.size() < n) {
+    auto index = dist(gen);
+    if (selectedIndices.insert(index).second) {
+      randomWords.emplace_back(words[index]);
+    }
+  }
+
+  return randomWords;
+}
+
 int main() {
-  const auto words =
+  const auto allWords =
       getWordList(std::filesystem::path("./english-words/words_alpha.txt"));
+
+  const auto words = getNRandomWords(allWords, 10);
 
   std::printf("Loaded %zu words\n", words.size());
 
