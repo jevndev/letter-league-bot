@@ -1,7 +1,7 @@
 
 CXX := clang++-19
 
-CXXFLAGS := -Wall -Wextra -std=c++23 -g
+CXXFLAGS := -Wall -Wextra -Wreturn-type -Werror -std=c++23 -g
 
 TARGET := main
 
