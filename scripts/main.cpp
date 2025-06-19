@@ -34,7 +34,8 @@ struct RelativeLocation {
 
   friend std::ostream &operator<<(std::ostream &os,
                                   const RelativeLocation &location) {
-    os << "[" << location.m_x << "," << location.m_y << "]";
+    os << "[" << static_cast<int>(location.m_x) << ","
+       << static_cast<int>(location.m_y) << "]";
     return os;
   };
 };
@@ -205,7 +206,7 @@ void writeWordMap(
     assert(placementMap.size() > 0);
 
     for (const auto &placement : validPlacements) {
-      file << placement;
+      file << placement << ",";
     }
 
     file << "\n";
