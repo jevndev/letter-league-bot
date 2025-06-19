@@ -1,0 +1,3 @@
+[submodule "scripts/english-words"]
+	path = scripts/english-words
+	url = https://github.com/dwyl/english-words.git
